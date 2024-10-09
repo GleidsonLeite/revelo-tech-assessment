@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Make {
+  id          Int       @id @default(autoincrement())
+  name        String
+  vehicleTypes VehicleType[]
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime?     @updatedAt @map("updated_at")
+
+  @@map("makes")
+}
+
+model VehicleType {
+  id        Int       @id @default(autoincrement())
+  name      String
+  make      Make      @relation(fields: [makeId], references: [id])
+  makeId    Int       @map("make_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("vehicle_types")
+}

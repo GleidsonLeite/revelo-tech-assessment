@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: app-pg
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
+  
+  app:
+    container_name: app
+    build: .
+    ports:
+      - 3333:3333
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:5432/app?schema=public
